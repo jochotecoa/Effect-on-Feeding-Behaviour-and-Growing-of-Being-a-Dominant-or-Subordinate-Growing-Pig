@@ -1,0 +1,85 @@
+library(tidyverse)
+
+hierarchy_data = readRDS('output/hierarchy_ranking_groups/dominance_phase_1.rds') %>% 
+  merge(readRDS('output/hierarchy_ranking_groups/metadata_phase_1.rds'), by = 'ID') %>% 
+  mutate(Pen = as.factor(Pen))
+hierarchy_data$ID[hierarchy_data$ID=='M904'] = 'M686'
+
+
+
+boxplot(Dominant.Confirmed ~ hierarchy, hierarchy_data)
+boxplot(Dominant ~ hierarchy, hierarchy_data)
+
+feed_data_1 = readRDS('output/ranking_diff_consumo_without_modelling/consumo_median_residuals_by_mixgroup.rds') %>% 
+  filter(group == 'initial') %>% 
+  mutate(ID = gsub('@.*', '', Ta)) %>% 
+  merge.data.frame(hierarchy_data, by = 'ID')
+
+lm(Co_median ~ hierarchy + Pen, feed_data_1) %>% summary()
+boxplot(Co_median ~ hierarchy, feed_data_1)
+ggstatsplot::ggbetweenstats(data = feed_data_1, x = hierarchy, y = Co_median)
+
+nvis_total_data_1 = readRDS('output/Historico_CONTROL_raw_VISITS_without_modelling/n_visitas_median_residuals_by_mixgroup.rds') %>%
+  filter(group == 0) %>% 
+  mutate(ID = gsub('@.*', '', Ta)) %>% 
+  merge.data.frame(hierarchy_data, by = 'ID')
+
+boxplot(n_visitas_median ~ hierarchy, nvis_total_data_1)
+ggstatsplot::ggbetweenstats(data = nvis_total_data_1, x = hierarchy, y = residuals_nvis_median)
+
+ti_total_data_1 = readRDS('output/Historico_CONTROL_raw_VISITS_without_modelling/duracion_total_diaria_consumo_median_residuals_by_mixgroup.rds') %>%
+  filter(group == 0) %>% 
+  mutate(ID = gsub('@.*', '', Ta)) %>% 
+  merge.data.frame(hierarchy_data, by = 'ID')
+
+boxplot(Ti_median ~ hierarchy, ti_total_data_1)
+ggstatsplot::ggbetweenstats(data = ti_total_data_1, x = hierarchy, y = residuals_ti_median)
+
+fr_total_data_1 = readRDS('output/Historico_CONTROL_raw_VISITS_without_modelling/velocidad_consumo_median_residuals_by_mixgroup.rds') %>%
+  filter(group == 0) %>% 
+  mutate(ID = gsub('@.*', '', Ta)) %>% 
+  merge.data.frame(hierarchy_data, by = 'ID')
+
+boxplot(Fr_median ~ hierarchy, fr_total_data_1)
+ggstatsplot::ggbetweenstats(data = fr_total_data_1, x = hierarchy, y = Fr_median)
+
+
+ti_median_data_1 = readRDS('output/Historico_CONTROL_raw_VISITS/duracion_mediana_diaria_consumo_median_by_mixgroup.rds') %>%
+  filter(group == 0) %>% 
+  mutate(ID = gsub('@.*', '', Ta)) %>% 
+  merge.data.frame(hierarchy_data, by = 'ID')
+
+boxplot(median_Ti_median ~ hierarchy, ti_median_data_1)
+
+ggstatsplot::ggbetweenstats(data = ti_median_data_1, x = hierarchy, y = median_Ti_median)
+
+
+ti_range_data_1 = readRDS('output/Historico_OCCUPATION_TIME/time_slot_mean_by_mixgroup.rds') %>%
+  filter(group == 0) %>% 
+  mutate(ID = gsub('@.*', '', Ta)) %>% 
+  merge.data.frame(hierarchy_data, by = 'ID')
+
+
+for (variable in subset(colnames(ti_range_data_1), grepl('H', colnames(ti_range_data_1)))) {
+  boxplot(ti_range_data_1[[variable]] ~ ti_range_data_1$hierarchy, 
+          xlab = 'hierarchy', ylab = variable)
+}
+
+for (variable in subset(colnames(ti_range_data_1), grepl('H', colnames(ti_range_data_1)))) {
+  a = ggstatsplot::ggbetweenstats(data = ti_range_data_1, x = hierarchy, 
+                              y = variable)
+  
+}
+
+for (variable in subset(colnames(ti_range_data_1), grepl('H', colnames(ti_range_data_1)))) {
+  print(variable)
+  shp_tst = shapiro.test(ti_range_data_1[, variable])
+  if (shp_tst$p.value >= 0.05) {
+    a = ggstatsplot::ggbetweenstats(data = ti_range_data_1, x = hierarchy, 
+                                    y = !!sym(variable))
+  } else {
+    a = ggstatsplot::ggbetweenstats(data = ti_range_data_1, x = hierarchy, 
+                                    y = !!sym(variable), type = 'nonparametric')
+  }
+  plot(a)
+}
