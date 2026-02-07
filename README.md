@@ -11,9 +11,13 @@ This repository contains the R scripts used to analyze the relationship between 
 3.  **Hierarchy Analysis:** Classifying animals and comparing performance between groups.
 
 ## Directory Structure
-- **`r/`**: Contains all R scripts for data loading, modeling, and visualization.
-    - `load_data.R`: Prepares and merges the raw datasets.
-    - `ranking_diff_consumo.R`: Main analysis script for consumption differences.
+- **`r/`**: Core scripts for data loading, modeling, and visualization.
+    - `load_data.R`: Main data loading script that prepares and merges the raw datasets.
+    - `ranking_diff_consumo.R`: Main analysis entry point for consumption differences.
+    - **`modeling/`**: Linear mixed models and ad-hoc modeling scripts.
+    - **`visualization/`**: Plotting and diagram generation.
+    - **`preprocessing/`**: Raw data cleaning and weight interpolation.
+    - **`exploratory/`**: Historical and legacy analysis scripts.
 - **`output/`**: Stores generated results and figures.
 - **`docs/`**: Documentation and analysis guides.
 
@@ -22,6 +26,9 @@ To run these scripts, the following raw data files must be present in the root d
 - `Registros_animales_Juan.txt`
 - `Pesos_Juan.txt`
 - `Output_consumo_from_script_comparar_pesos.txt`
+
+## Reproducibility
+**Important:** Always set your R working directory to the **Project Root** (where the `.Rproj` file is) before running any scripts. Do not change the working directory to subfolders (like `r/modeling`), as this will break file paths.
 
 ## Getting Started
 See [docs/ANALYSIS_GUIDE.md](docs/ANALYSIS_GUIDE.md) for detailed instructions on running the analysis.
