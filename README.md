@@ -5,12 +5,15 @@ Public code and analysis for the paper: **"Effect on Feeding Behaviour and Growi
 **Published in:** [Animals (MDPI)](https://www.mdpi.com/2076-2615/14/13/1906)
 
 ## Project Overview
-This repository contains the R scripts used to analyze the relationship between social hierarchy (dominance/subordination) and feeding behavior/growth in pigs.
+This repository contains the R scripts used to analyze the relationship between social hierarchy (dominance/subordination) and feeding behavior/growth in pigs. The analysis involves:
+1.  **Data Loading:** Merging daily feed consumption records with interpolated weight data.
+2.  **Modeling:** Using linear models to calculate residual feed consumption (correcting for weight and age).
+3.  **Hierarchy Analysis:** Classifying animals and comparing performance between groups.
 
 ## Directory Structure
-- **`r/`**: Core scripts.
-    - `load_data.R`: Main data loading script.
-    - `ranking_diff_consumo.R`: Main analysis entry point.
+- **`r/`**: Core scripts for data loading, modeling, and visualization.
+    - `load_data.R`: Main data loading script that prepares and merges the raw datasets.
+    - `ranking_diff_consumo.R`: Main analysis entry point for consumption differences.
     - **`modeling/`**: Linear mixed models and ad-hoc modeling scripts.
     - **`visualization/`**: Plotting and diagram generation.
     - **`preprocessing/`**: Raw data cleaning and weight interpolation.
